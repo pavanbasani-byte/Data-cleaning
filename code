@@ -1,0 +1,22 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+df = pd.read_csv("data.csv")  # Load CSV file
+df.dropna(inplace=True)
+df.fillna(value={"column_name": "default_value"}, inplace=True)
+df.fillna(value={"column_name": "default_value"}, inplace=True)
+df["date_column"] = pd.to_datetime(df["date_column"])
+df["numeric_column"] = pd.to_numeric(df["numeric_column"], errors='coerce')
+import numpy as np
+
+Q1 = df["column_name"].quantile(0.25)
+Q3 = df["column_name"].quantile(0.75)
+IQR = Q3 - Q1
+
+df_filtered = df[~((df["column_name"] < (Q1 - 1.5 * IQR)) | (df["column_name"] > (Q3 + 1.5 * IQR)))]
+from sklearn.preprocessing import StandardScaler
+scaler = StandardScaler()
+df["scaled_column"] = scaler.fit_transform(df[["column_name"]])
+sns.boxplot(x=df["column_name"])  # Box plot for outliers
+plt.show()
